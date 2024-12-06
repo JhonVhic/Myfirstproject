@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    
+    <style>
+        body {
+            background-image: linear-gradient(to right, rgb(86, 126, 207), rgb(236, 236, 236));
+        }
+    </style>
+    
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <div class="container">
+        <h2>REGISTRATION FORM</h2>
+        <form id="registrationForm" onsubmit="return validateForm()">
+
+            <!-- Name -->
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <span class="error" id="nameError">Full name is required.</span>
+            </div>
+            <!-- Birthday -->
+            <div class="form-group">
+                <label for="birthday">Birthday:</label>
+                <input type="date" id="birthday" name="birthday" required>
+                <span class="error" id="nameError">birthday is required.</span>
+            </div>
+            <!-- Sex -->
+            <div class="form-group">
+                <label for="sex">Sex:</label>
+                <select id="sex" name="sex" required>
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="not_specified">Not Specified</option>
+                </select>
+            </div>
+            <!-- Sex -->
+            <div class="form-group">
+                <label for="houseNo">Address:</label>
+                <input type="text" id="houseNo" name="houseNo" required>
+                <span class="error" id="housenoError">House no# is required.</span>
+            </div>
+            <!-- Country -->
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <select id="country" name="country" required>
+                    <option value="">Choose</option>
+                    <option value="us">United States</option>
+                    <option value="ca">Canada</option>
+                    <option value="uk">United Kingdom</option>
+                    <option value="au">Australia</option>
+                    <option value="in">India</option>
+                    <option value="ph">Philippines</option>
+                    <option value="fr">France</option>
+                    <option value="de">Germany</option>
+                </select>
+            </div>
+            <!-- Contact Info -->
+            <div class="form-group">
+                    <label for="primaryPhone">Phone Number:</label>
+                    <input type="text" id="primaryPhone" name="primaryPhone" maxlength="11" required pattern="^[0-9]{11}$" placeholder="Enter 11-digit number">
+                </div>
+                <div class="form-group">
+                    <label for="secondaryPhone">Secondary Phone Number:</label>
+                    <input type="text" id="secondaryPhone" name="secondaryPhone" maxlength="11" pattern="^([0-9]{11}|N/A|n/a)$" placeholder="Enter 11-digit number or 'N/A'">
+                </div>
+                    <div class="form-group">
+
+                    <label for="otherPhone">Other Phone Number:</label>
+                    <input type="text" id="otherPhone" name="otherPhone" maxlength="11" pattern="^([0-9]{11}|N/A|n/a)$" placeholder="Enter 11-digit number or 'N/A'">
+                </div>
+            <!-- Email Info -->
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <span class="error" id="emailError">primary email must be valid email address.</span>
+            </div>
+            <div class="form-group">
+                <label for="secondaryEmail">Secondary Email:</label>
+                <input type="email" id="secondaryEmail" name="secondaryEmail" placeholder="N/A if none">
+            </div>
+            <div class="form-group">
+                <label for="primaryContact">Primary Contact:</label>
+                <input type="text" id="primaryContact" name="primaryContact" required>
+            </div>
+            <div class="form-group">
+                <label for="studentNumber">Student Number:</label>
+                <input type="text" id="studentNumber" name="studentNumber" required>
+                <span class="error" id="studentnumberError">Student number is required.</span>
+            </div>
+            <!-- College and course -->
+            <div class="form-group">
+                <label for="college" class="form-label">College <span class="text-danger"></span></label>
+                <select class="form-select" id="college" name="college" required>
+                    <option value="">Select</option>
+                    <option value="CEIT">CEIT</option>
+                    <option value="GSOLC">GSOLC</option>
+                    <option value="CAFENR">CAFENR</option>
+                    <option value="CAS">CAS</option>
+                    <option value="CCJ">CCJ</option>
+                    <option value="CEMDS">CEMDS</option>
+                    <option value="CED">CED</option>
+                    <option value="CON">CON</option>
+                    <option value="CVMBS">CVMBS</option>
+                </select>
+                <div id="collegeError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="course" class="form-label">Course <span class="text-danger"></span></label>
+                 <select class="form-select" id="course" name="course" required>
+                    <option value="">Select</option>
+                </select>
+            <div id="courseError" class="error"></div>
+            </div>
+            <!-- Registration -->
+            <div class="form-group">
+                <label for="registrationDate">Registration Date:</label>
+                <input type="date" id="registrationDate" name="registrationDate" required>
+            </div>
+            <div class="form-group">
+                <label for="expiryDate">Expiry Date:</label>
+                <input type="date" id="expiryDate" name="expiryDate" required>
+            </div>
+            <input type="submit" value="Register">
+        </form>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+document.getElementById("phoneForm").addEventListener("submit", function(event) {
+            const primaryPhone = document.getElementById("primaryPhone").value;
+            const secondaryPhone = document.getElementById("secondaryPhone").value;
+            const otherPhone = document.getElementById("otherPhone").value;
+            const phoneFields = [
+                { value: primaryPhone, name: "Primary Phone", isRequired: true },
+                { value: secondaryPhone, name: "Secondary Phone", isRequired: false },
+                { value: otherPhone, name: "Other Phone", isRequired: false }
+            ];
+
+            for (const field of phoneFields) {
+                // Check for required field (Primary) to be 11 digits
+                if (field.isRequired && (field.value.length !== 11 || !/^\d+$/.test(field.value))) {
+                    alert(`Please enter a valid 11-digit number for ${field.name}.`);
+                    event.preventDefault();
+                    return;
+                }
+                // Check optional fields for 11-digit number or "N/A"
+                if (!field.isRequired && field.value !== "N/A" && field.value !== "n/a" && (field.value.length !== 11 || !/^\d+$/.test(field.value))) {
+                    alert(`Please enter a valid 11-digit number or 'N/A' for ${field.name}.`);
+                    event.preventDefault();
+                    return;
+                }
+            }
+        });
+
+const courses = {
+        CEIT: ['BS Agricultural and Biosystems Engineering', 'BS Architecture', 'BS Civil Engineering',
+            'BS Computer Engineering', 'BS Computer Science', 'BS Electrical Engineering',
+            'BS Electronics Engineering', 'BS Industrial Technology Major in Automotive Technology',
+            'BS Industrial Technology Major in Electrical Technology',
+            'BS Industrial Technology Major in Electronics Technology', 'BS Information Technology'
+        ],
+        GSOLC: ['PhD in Agriculture', 'PhD in Education', 'PhD in Management',
+            'Master in Business Administration', 'Master in Agriculture',
+            'Master of Arts in Education', 'Master in Engineering', 'Master of Management',
+            'Master of Professional Studies', 'MS Agriculture', 'MS Biology', 'MS Food Science',
+            'Master in Information Technology'
+        ],
+        CAFENR: ['Bachelor of Agricultural Entrepreneurship', 'BS Agriculture',
+            'BS Environmental Science', 'BS Food Technology'
+        ],
+        CAS: ['BA English Language Studies', 'BA Journalism', 'BA Political Science',
+            'BA Applied Mathematics', 'BS Biology', 'BS Psychology', 'BS Social Work'
+        ],
+        CCJ: ['BS Criminology', 'BS Industrial Security Management'],
+        CEMDS: ['BS Accountancy', 'BS Business Management', 'BS Economics', 'BS International Studies',
+            'BS Office Administration'
+        ],
+        CED: ['Bachelor of Early Childhood Education', 'Bachelor of Elementary Education',
+            'Bachelor of Secondary Education', 'Bachelor of Special Needs Education',
+            'Bachelor of Technology and Livelihood Education', 'BS Hospitality Management',
+            'BS Tourism Management', 'Teacher Certificate Program', 'Science High School',
+            'Elementary Education', 'Pre-Elementary Education'
+        ],
+        CON: ['BS Medical Technology', 'BS Midwifery', 'BS Nursing', 'Diploma in Midwifery'],
+        CVMBS: ['Doctor of Veterinary Medicine']
+    };
+
+    $(document).ready(function() {
+        $('#college').change(function() {
+            const selectedCollege = $(this).val();
+            const courseSelect = $('#course');
+            courseSelect.empty();
+            courseSelect.append('<option value="">Select Course</option>');
+            if (selectedCollege && courses[selectedCollege]) {
+                courses[selectedCollege].forEach(function(course) {
+                    courseSelect.append('<option value="' + course + '">' + course + '</option>');
+                });
+            }
+        });
+
+        $('#collegeCourseForm').on('submit', function(event) {
+            event.preventDefault();
+            let valid = true;
+
+            if ($('#college').val() === "") {
+                $('#collegeError').text("Please select a college.");
+                valid = false;
+            } else {
+                $('#collegeError').text("");
+            }
+
+            if ($('#course').val() === "") {
+                $('#courseError').text("Please select a course.");
+                valid = false;
+            } else {
+                $('#courseError').text("");
+            }
+
+            if (valid) {
+                alert("Form submitted successfully!");
+                // Add form submission logic here
+            }
+        });
+    });
+        function validateForm() {
+            var form = document.getElementById('registrationForm');
+            var inputs = form.getElementsByTagName('input');
+            var selects = form.getElementsByTagName('select');
+            var isValid = true;
+
+            // Remove existing error messages
+            var errors = document.getElementsByClassName('error');
+            while(errors.length > 0){
+                errors[0].parentNode.removeChild(errors[0]);
+            }
+
+            // Validate required fields
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].hasAttribute('required') && inputs[i].value === '') {
+                    showError(inputs[i], 'This field is required');
+                    isValid = false;
+                }
+            }
+
+            for (var i = 0; i < selects.length; i++) {
+                if (selects[i].hasAttribute('required') && selects[i].value === '') {
+                    showError(selects[i], 'Please select an option');
+                    isValid = false;
+                }
+            }
+
+            // Validate email format
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var emailInputs = ['email', 'secondaryEmail'];
+            for (var i = 0; i < emailInputs.length; i++) {
+                var input = document.getElementById(emailInputs[i]);
+                if (input.value !== '' && !emailRegex.test(input.value)) {
+                    showError(input, 'Please enter a valid email address');
+                    isValid = false;
+                }
+            }
+
+            // Validate dates
+            var today = new Date();
+            var birthday = new Date(document.getElementById('birthday').value);
+            var registrationDate = new Date(document.getElementById('registrationDate').value);
+            var expiryDate = new Date(document.getElementById('expiryDate').value);
+
+            if (birthday > today) {
+                showError(document.getElementById('birthday'), 'Birthday cannot be in the future');
+                isValid = false;
+            }
+
+            if (registrationDate > today) {
+                showError(document.getElementById('registrationDate'), 'Registration date cannot be in the future');
+                isValid = false;
+            }
+
+            if (expiryDate <= registrationDate) {
+                showError(document.getElementById('expiryDate'), 'Expiry date must be after registration date');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function showError(input, message) {
+            var error = document.createElement('div');
+            error.className = 'error';
+            error.innerHTML = message;
+            input.parentNode.insertBefore(error, input.nextSibling);
+        }
+    </script>
+</body>
+</html>
